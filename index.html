@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ka">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#10231d"><title>EquineCare AI — ცხენების ასისტენტი</title>
+<style>
+:root{--green:#173e31;--green2:#28634d;--bg:#f3f6f0;--ink:#17251f;--muted:#68766e;--line:#e0e7df}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);font:16px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink)}
+header{background:linear-gradient(120deg,#10231d,#205440);color:white;padding:17px max(18px,calc((100% - 920px)/2));display:flex;align-items:center;gap:12px}
+.logo{background:#d8edb9;color:var(--green);width:44px;height:44px;border-radius:14px;display:grid;place-items:center;font-size:25px}
+header strong{display:block;font-size:19px}header small{color:#d0e0d5}.wrap{max-width:920px;margin:auto;padding:24px 16px}
+.intro{background:#e4efd9;border:1px solid #d8e5d2;padding:22px;border-radius:20px;margin-bottom:16px}.intro h1{margin:0 0 8px;font-size:clamp(25px,4vw,36px);line-height:1.15}.intro p{margin:0;color:#52645a}
+.warning{background:#fff0ef;border:1px solid #f3cecc;color:#84272b;padding:13px 15px;border-radius:13px;font-size:14px;margin-bottom:16px}
+.chatbox{background:white;border:1px solid var(--line);border-radius:20px;overflow:hidden;box-shadow:0 12px 35px #173e3110}
+.chathead{padding:17px 19px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:10px}.status{font-size:12px;color:#2d633f;background:#e1f1db;border-radius:30px;padding:6px 9px;font-weight:800}
+.messages{height:min(54vh,520px);min-height:330px;overflow-y:auto;padding:18px;background:#f8faf6}.msg{max-width:90%;padding:12px 14px;border-radius:15px;margin-bottom:12px;white-space:pre-wrap;overflow-wrap:anywhere}.bot{background:white;border:1px solid #e5ebe3;border-top-left-radius:4px}.user{background:#e1efd8;margin-left:auto;border-top-right-radius:4px}.typing{color:var(--muted);font-style:italic}
+.composer{padding:14px;border-top:1px solid var(--line);background:white}.row{display:flex;gap:9px;align-items:flex-end}.row textarea{flex:1;min-width:0;resize:vertical;min-height:50px;max-height:160px;padding:13px;border:1px solid #d8e0d8;border-radius:13px;font:inherit;outline:none}.row textarea:focus{border-color:#4c8a69;box-shadow:0 0 0 3px #4c8a691a}.send{background:var(--green);color:white;border:0;border-radius:13px;padding:14px 18px;font-weight:800;min-height:50px}.send:disabled{opacity:.55;cursor:wait}.hint{font-size:12px;color:var(--muted);margin:8px 3px 0}.tools{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.tools button{border:1px solid #dce5d8;background:#f8faf6;border-radius:30px;padding:8px 11px;color:#355644;font-size:13px}.reset{border:1px solid #dce5d8;background:white;border-radius:10px;padding:8px 11px;color:#355644;font-weight:700}.footer{text-align:center;color:var(--muted);font-size:12px;padding:20px 0}
+@media(max-width:540px){.messages{height:52vh;min-height:300px}.msg{max-width:96%}.intro{padding:18px}.send{padding:12px}.chathead{align-items:flex-start}}
+</style></head>
+<body>
+<header><div class="logo">♞</div><div><strong>EquineCare AI</strong><small>ცხენების მოვლისა და ჯანმრთელობის ასისტენტი</small></div></header>
+<main class="wrap">
+<section class="intro"><h1>მკითხე ყველაფერი ცხენებზე.</h1><p>ეს არის თავისუფალი კითხვა-პასუხის ჩატი. აღწერე შემთხვევა შენი სიტყვებით — ასისტენტი გაითვალისწინებს საუბრის წინა შეტყობინებებს და საჭიროებისას დამატებით კითხვებს დაგისვამს.</p></section>
+<div class="warning"><strong>უსაფრთხოება:</strong> ეს ასისტენტი ვეტერინარს ვერ ჩაანაცვლებს. ძლიერი კოლიკა, სუნთქვის გაძნელება, ძლიერი სისხლდენა, კრუნჩხვა ან ადგომის შეუძლებლობა გადაუდებელ დახმარებას მოითხოვს. ასეთ დროს დაუყოვნებლივ დაუკავშირდი ვეტერინარს.</div>
+<section class="chatbox">
+<div class="chathead"><div><strong>💬 კითხვა-პასუხი</strong><div style="font-size:12px;color:#68766e">საუბრის კონტექსტი ინახება მიმდინარე სესიაში</div></div><button class="reset" id="reset">ახალი საუბარი</button></div>
+<div id="messages" class="messages" aria-live="polite"><div class="msg bot">გამარჯობა! 🐴 მე EquineCare AI ვარ — ცხენების მოვლასა და ჯანმრთელობაზე ორიენტირებული ასისტენტი.\n\nმომწერე, რა გაინტერესებს. თუ კონკრეტულ ცხენზეა საუბარი, მიუთითე ასაკი, ნიშნები, როდის დაიწყო და რა შეიცვალა. მე დაგისვამ დამატებით კითხვებს, როცა ეს საჭიროა.\n\nგთხოვ, მძიმე სიმპტომების შემთხვევაში პასუხის მოლოდინში ვეტერინართან დაკავშირება არ გადადო.</div></div>
+<div class="composer"><form id="form"><div class="row"><textarea id="input" rows="1" placeholder="დაწერე კითხვა ქართულად..." aria-label="შეტყობინება"></textarea><button id="send" class="send" type="submit">გაგზავნა ➤</button></div></form><div class="hint">Enter — გაგზავნა · Shift+Enter — ახალი ხაზი</div><div class="tools"><button type="button" data-q="ჩემი კვიცი სუსტადაა. დამისვი საჭირო კითხვები, რომ გავიგოთ რამდენად სასწრაფოა.">კვიცი ცუდადაა</button><button type="button" data-q="მომიყევი ცხენებში კოლიკის ნიშნებსა და გადაუდებელ მოქმედებებზე.">კოლიკა</button><button type="button" data-q="როგორ მოვუარო ცხენს ყოველდღიურად — კვება, წყალი, ჩლიქები და მოძრაობა?">ყოველდღიური მოვლა</button><button type="button" data-q="რა ინფორმაცია მოვამზადო ვეტერინართან დარეკვისას?">ვეტერინარისთვის</button></div></div>
+</section>
+<div class="footer">EquineCare AI • საინფორმაციო დამხმარე, არა ვეტერინარული დიაგნოზი</div>
+</main>
+<script>
+const messagesEl=document.getElementById('messages'),form=document.getElementById('form'),input=document.getElementById('input'),send=document.getElementById('send');
+let history=[];
+function bubble(text,who){const d=document.createElement('div');d.className='msg '+who;d.textContent=text;messagesEl.appendChild(d);messagesEl.scrollTop=messagesEl.scrollHeight;return d}
+async function sendMessage(text){
+ text=text.trim();if(!text||send.disabled)return;
+ bubble(text,'user');history.push({role:'user',content:text});input.value='';send.disabled=true;
+ const pending=bubble('ვფიქრობ...','bot typing');
+ try{
+   const res=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:history})});
+   const data=await res.json();if(!res.ok)throw new Error(data.error||'სერვერთან დაკავშირება ვერ მოხერხდა.');
+   pending.classList.remove('typing');pending.textContent=data.reply||'პასუხი ვერ მივიღე. სცადე ხელახლა.';
+   history.push({role:'assistant',content:pending.textContent});
+ }catch(err){
+   pending.classList.remove('typing');
+   pending.textContent='AI სერვერთან დაკავშირება ვერ მოხერხდა. '+(err.message||'შეამოწმე ინტერნეტი და სერვერის პარამეტრები.')+'\n\nთუ გვერდი უბრალოდ HTML ფაილად გახსენი ან CodePen-ში გაუშვი, /api/chat სერვერი არ არსებობს. საჭიროა პროექტის სერვერზე გაშვება და API გასაღების სერვერზე დამატება.';
+   history.pop();
+ }finally{send.disabled=false;input.focus();messagesEl.scrollTop=messagesEl.scrollHeight}
+}
+form.addEventListener('submit',e=>{e.preventDefault();sendMessage(input.value)});
+input.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();form.requestSubmit()}});
+document.querySelectorAll('[data-q]').forEach(b=>b.addEventListener('click',()=>sendMessage(b.dataset.q)));
+document.getElementById('reset').addEventListener('click',()=>{history=[];messagesEl.innerHTML='';bubble('ახალი საუბარი დავიწყეთ. 🐴 მომწერე, რით დაგეხმარო.','bot');input.focus()});
+</script></body></html>
